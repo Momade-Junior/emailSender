@@ -1,32 +1,56 @@
-<?php
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require 'src/Exception.php';
-require 'src/PHPMailer.php';
-require 'src/SMTP.php';
-
+ require 'PHPMailerAutoload.php';
+        
+      if (isset($_POST['assunto']) && !empty($_POST['assunto'])) {
+                $assunto = $_POST['assunto'];
+      }
+       if (isset($_POST['mensagem']) && !empty($_POST['mensagem'])) {
+                 $mensagem = $_POST['mensagem'];
+      }
+       
 $mail = new PHPMailer;
-$mail->isSMTP(); 
-$mail->SMTPDebug = 2; // 0 = off (for production use) - 1 = client messages - 2 = client and server messages
-$mail->Host = "smtp.gmail.com"; // use $mail->Host = gethostbyname('smtp.gmail.com'); // if your network does not support SMTP over IPv6
-$mail->Port = 587; // TLS only
-$mail->SMTPSecure = 'tls'; // ssl is depracated
+    
+$mail->isSMTP();
+$mail->Host = 'smtp.gmail.com';
 $mail->SMTPAuth = true;
-$mail->Username = "momadejunior584gmail.com";
-$mail->Password = "Neu$a1994";
-$mail->setFrom('juniorz@hotmail.com');
-$mail->addAddress('momadejunior584gmail.com', 'Momade Junior');
-$mail->Subject = 'PHPMailer GMail SMTP test';
-$mail->msgHTML("test body"); //$mail->msgHTML(file_get_contents('contents.html'), __DIR__); //Read an HTML message body from an external file, convert referenced images to embedded,
-$mail->AltBody = 'HTML messaging not supported';
-// $mail->addAttachment('images/phpmailer_mini.png'); //Attach an image file
+$mail->SMTPSecure = 'tls';
+$mail->Username = 'exemplo@gmail.com';
+$mail->Password = 'senha';
+$mail->Port = 587;
+     
 
-if(!$mail->send()){
-    echo "Mailer Error: " . $mail->ErrorInfo;
-}else{
-    echo "Message sent!";
+$mail->setFrom('juniorz@gmail.com');
+$mail->addReplyTo('momadejunior584@gmail.com');
+$mail->addAddress('momadejunior584@gmail.com', 'Momade Junior');
+
+$mail->isHTML(true);
+$mail->Subject = 'Assunto do email';
+$mail->Body    = 'Este é o conteúdo da mensagem em <b>HTML!</b>';
+$mail->AltBody = 'Para visualizar essa mensagem acesse http://site.com.br/mail';
+$mail->addAttachment('/tmp/image.jpg', 'nome.jpg');
+
+$mail->SMTPDebug = 3;
+$mail->Debugoutput = 'html';
+$mail->setLanguage('pt');
+
+
+if(!$mail->send()) {
+    echo 'Não foi possível enviar a mensagem.<br>';
+    echo 'Erro: ' . $mail->ErrorInfo;
+} else {
+    echo 'Mensagem enviada.';
 }
-
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<form action="index.php" method="post">
+          <input type="text" name="assunto" placeholder="Assunto">
+          <input type="text" name="mensagem" placeholder="Mensagem">
+          <input type="submit" name="Enviar">
+</form>
+</body>
+</html>
